@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerCharacter : ICharacter
 {
+    
     // Start is called before the first frame update
     void Start()
     {

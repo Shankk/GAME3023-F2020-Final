@@ -6,18 +6,8 @@ public class AICharacter : ICharacter
 {
     [SerializeField]
     ICharacter PlayerCharacter;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    new int hp;
     override public void TakeTurn()
     {
         int OpponentsTypeID = (int)PlayerCharacter.MyRhetoricType;

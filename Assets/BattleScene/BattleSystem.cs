@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 enum BattlePhase
 {
@@ -23,16 +24,17 @@ public class BattleSystem : MonoBehaviour
     public UnityEvent<ICharacter> onCharacterTurnBegin;
     public UnityEvent<string> onCharacterTurn;
     //public TextBoxAnimator textAnimator;
-    bool IsEnemysTurn = false;
+    bool TurnInProgress = false;
+    bool BattleCompleted = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        AdvanceTurn();
 
         foreach(ICharacter character in combatants)
         {
             character.onAbilityUsed.AddListener(CharacterUsedAbilityHandler);
+            character.SetStats();
         }
     }
 
@@ -44,15 +46,30 @@ public class BattleSystem : MonoBehaviour
 
     public void AdvanceTurn()
     {
-        if (IsEnemysTurn)
+        for (int i = 0; i < 2; i++)
         {
-            //ICharacter whoseTurnItIs = combatants[(int)phase];
+            if (combatants[0].hp <= 0)
+            {
+                BattleCompleted = true;
+                onCharacterTurn.Invoke("You Lost! Opponent Won!");
+                //SceneManager.LoadScene("GameOver");
+            }
+            else if(combatants[1].hp <= 0)
+            {
+                BattleCompleted = true;
+                onCharacterTurn.Invoke("Player Won The Battle!");
+            }
+        }
+        if(BattleCompleted)
+        {
+            // Do Nothing, because the battle is over!
+        }
+        else if (TurnInProgress && !BattleCompleted)
+        {
             Debug.Log("Invalid Action! It is " + combatants[(int)phase].name + "'s turn!");
-            //onCharacterTurnBegin.Invoke(whoseTurnItIs);
         }
         else
         {
-
             phase++;
             if (phase >= BattlePhase.Count)
             {
@@ -63,13 +80,6 @@ public class BattleSystem : MonoBehaviour
             Debug.Log("It is " + combatants[(int)phase].name + "'s turn!");
             whoseTurnItIs.TakeTurn();
             onCharacterTurnBegin.Invoke(whoseTurnItIs);
-
-            if (phase == BattlePhase.Enemy)
-            {
-                //WaitTime = textAnimator.TextTime;
-                //StartCoroutine(OpponentEndTurn(WaitTime));
-
-            }
         }
 
     }
@@ -84,21 +94,16 @@ public class BattleSystem : MonoBehaviour
 
     public void CharacterUsedAbilityHandler(ICharacter caster, Ability ability)
     {
+        if (!TurnInProgress && !BattleCompleted)
+        {
+            TurnInProgress = true;
 
-        ICharacter target = null;
-        //foreach (ICharacter character in combatants)
-        //{
-        //    if(character != caster)
-        //    {
-        //        target = character;
-        //        break;
-        //    }
-        //}
-        // Targets the User who isnt in Turn
-        target = combatants[((int)phase + 1) % (int)BattlePhase.Count];
-
-        ability.ApplyEffects(caster, target);
-        StartCoroutine(SwapTurnDelay(1.0f));
+            ICharacter target = null;
+            // Targets the User who isnt in Turn
+            target = combatants[((int)phase + 1) % (int)BattlePhase.Count];
+            ability.ApplyEffects(caster, target);
+            StartCoroutine(CurrentTurnLog(1.0f, caster, ability));
+        }
         
     }
 
@@ -108,15 +113,15 @@ public class BattleSystem : MonoBehaviour
         AdvanceTurn();
     }
 
-    IEnumerator OpponentEndTurn(float time)
+    IEnumerator CurrentTurnLog(float time, ICharacter caster, Ability ability)
     {
-        IsEnemysTurn = true;
         yield return new WaitForSeconds(time);
 
-        onCharacterTurn.Invoke("Opponent Ended Turn!");
+        onCharacterTurn.Invoke(caster.name + " used " + ability.abilityType + "!");
         yield return new WaitForSeconds(time);
 
-        IsEnemysTurn = false;
+        TurnInProgress = false;
         AdvanceTurn();
     }
+
 }
