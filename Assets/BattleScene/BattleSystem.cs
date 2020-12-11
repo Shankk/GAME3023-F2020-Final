@@ -30,7 +30,7 @@ public class BattleSystem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        AdvanceTurn();
         foreach(ICharacter character in combatants)
         {
             character.onAbilityUsed.AddListener(CharacterUsedAbilityHandler);
@@ -94,7 +94,7 @@ public class BattleSystem : MonoBehaviour
 
     public void CharacterUsedAbilityHandler(ICharacter caster, Ability ability)
     {
-        if (!TurnInProgress && !BattleCompleted)
+        if (TurnInProgress == false && !BattleCompleted)
         {
             TurnInProgress = true;
 
