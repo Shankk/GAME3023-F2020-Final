@@ -8,11 +8,37 @@ public class AICharacter : ICharacter
     ICharacter PlayerCharacter;
 
     new int hp;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        DetermineType();
+    }
+
+    void DetermineType()
+    {
+        var TypeRange = Random.Range(0, 100);
+        if (TypeRange < 33)
+        {
+            MyRhetoricType = RhetoricTypeChart.Type.Fun;
+        }
+        else if ( TypeRange >= 33 && TypeRange < 66)
+        {
+            MyRhetoricType = RhetoricTypeChart.Type.Emotional;
+        }
+        else if (TypeRange >= 66)
+        {
+            MyRhetoricType = RhetoricTypeChart.Type.Logical;
+        }
+    }
+
     override public void TakeTurn()
     {
         int OpponentsTypeID = (int)PlayerCharacter.MyRhetoricType;
         int WeightedRange = Random.Range(0, 100);
         int AbilityID = 0, minValue = 33, maxValue = 66;
+
+        //
 
         // Determining what abilities to use against our Opponent
         if (OpponentsTypeID == 0) // Our Opponenet Equals Fun Type
