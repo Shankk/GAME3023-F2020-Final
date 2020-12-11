@@ -8,12 +8,17 @@ public class FightScene : MonoBehaviour
     float timeCheck = 0;
     bool isMoving = true;
     float moveX, moveY;
+    GameObject PlayerGO = null;
+    PlayerCharacterController movement = null;
 
     void Update()
     {
-        GameObject thePlayer = GameObject.FindWithTag("Player");
-        PlayerCharacterController movement = thePlayer.GetComponent<PlayerCharacterController>();
-       // Debug.Log("x: " + movement.movementVector.x+ " y: " + movement.movementVector.y);
+        if (PlayerGO == null)
+        {
+            PlayerGO = GameObject.FindWithTag("Player");
+            movement = PlayerGO.GetComponent<PlayerCharacterController>();
+        }
+        // Debug.Log("x: " + movement.movementVector.x+ " y: " + movement.movementVector.y);
         moveX = movement.movementVector.x;
         moveY = movement.movementVector.y;
     }
@@ -32,10 +37,9 @@ public class FightScene : MonoBehaviour
                 {
                     SceneManager.LoadScene("BattleScene");
                     // Set The Player Character Active State To False Since we Are in Battle Mode
-                    if (GameObject.FindWithTag("Player") == true)
+                    if (PlayerGO.tag == "Player")
                     {
-                        GameObject.FindWithTag("Player").GetComponentInChildren<Canvas>().enabled = false;
-                        GameObject.FindWithTag("Player").transform.position = new Vector3(100, 0, 0);
+                        PlayerGO.transform.position = new Vector3(100, 0, 0);
                     }
                     
                 }
