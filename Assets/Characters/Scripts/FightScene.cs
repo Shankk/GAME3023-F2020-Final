@@ -8,8 +8,8 @@ public class FightScene : MonoBehaviour
     float timeCheck = 0;
     bool isMoving = true;
     float moveX, moveY;
-    GameObject PlayerGO = null;
-    PlayerCharacterController movement = null;
+    public GameObject PlayerGO = null;
+    public PlayerCharacterController movement = null;
 
     void Update()
     {
@@ -35,13 +35,12 @@ public class FightScene : MonoBehaviour
                 Debug.Log("Entering");
                 if (WeightedRange <= 25)
                 {
+                    // Set The Location Of Where We Entered The Battle From
+                    GameObject.FindWithTag("Player").GetComponent<PlayerCharacterController>().TempBattleLocation = GameObject.FindWithTag("Player").transform.position;
+                    Debug.Log("Start Battle Position: " + GameObject.FindWithTag("Player").GetComponent<PlayerCharacterController>().TempBattleLocation);
                     SceneManager.LoadScene("BattleScene");
                     // Set The Player Character Active State To False Since we Are in Battle Mode
-                    if (PlayerGO.tag == "Player")
-                    {
-                        PlayerGO.transform.position = new Vector3(100, 0, 0);
-                    }
-                    
+                    PlayerGO.transform.position = new Vector3(100, 0, 0);
                 }
             }
             timeCheck = 0;

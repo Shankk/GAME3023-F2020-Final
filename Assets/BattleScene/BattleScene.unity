@@ -20108,6 +20108,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 540125153}
     m_Modifications:
+    - target: {fileID: 1079328107, guid: 936d5e7382385564c8c1a76a984b728e, type: 3}
+      propertyPath: battleSysRef
+      value: 
+      objectReference: {fileID: 1469306097}
     - target: {fileID: 1125545367, guid: 936d5e7382385564c8c1a76a984b728e, type: 3}
       propertyPath: m_Value
       value: 1
@@ -20199,6 +20203,10 @@ PrefabInstance:
     - target: {fileID: 290015407012148117, guid: 936d5e7382385564c8c1a76a984b728e, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 611365626986559938, guid: 936d5e7382385564c8c1a76a984b728e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnEscapeButtonClicked
       objectReference: {fileID: 0}
     - target: {fileID: 889248947793993456, guid: 936d5e7382385564c8c1a76a984b728e, type: 3}
       propertyPath: m_Name

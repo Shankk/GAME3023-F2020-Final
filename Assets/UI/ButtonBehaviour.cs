@@ -5,34 +5,54 @@ using UnityEngine.SceneManagement;
 
 public class ButtonBehaviour : MonoBehaviour
 {
-   
-public void OnMainMenuButtonClicked()
+    GameObject PlayerGO = null;
+    public Vector3 TempBattleLocation = new Vector3(0,0,0);
+
+    [SerializeField]
+    protected BattleSystem battleSysRef = null;
+
+    void Start()
+    {
+        PlayerGO = GameObject.FindWithTag("Player");
+        Debug.Log("In Player Battle Position: " + PlayerGO.GetComponent<PlayerCharacterController>().TempBattleLocation);
+        TempBattleLocation = PlayerGO.GetComponent<PlayerCharacterController>().TempBattleLocation;
+    }
+
+    public void OnMainMenuButtonClicked()
     {
         SceneManager.LoadScene("MainMenu");
     }
 
-public void OnPlayButtonClicked()
+    public void OnPlayButtonClicked()
     {
-        if(GameObject.FindWithTag("Player") == true)
+        if(PlayerGO.tag == "Player")
         {
-            GameObject.FindWithTag("Player").GetComponentInChildren<Canvas>().enabled = true;
-            GameObject.FindWithTag("Player").transform.position = new Vector3(0,0,0);
+            PlayerGO.transform.position = new Vector3(0,0,0);
         }
-
         SceneManager.LoadScene("Overworld");
-        
     }
     public void OnFightButtonClicked()
     {
         SceneManager.LoadScene("BattleScene");
         // Set The Player Character Active State To False Since we Are in Battle Mode
-        if (GameObject.FindWithTag("Player") == true)
+        if (PlayerGO.tag == "Player")
         {
-            GameObject.FindWithTag("Player").GetComponentInChildren<Canvas>().enabled = false;
-            GameObject.FindWithTag("Player").transform.position = new Vector3(100, 0, 0);
+            PlayerGO.transform.position = new Vector3(100, 0, 0);
         }
-        //GetComponentInParent<Canvas>().gameObject.SetActive(false);
-        //GetComponentInParent<PlayerCharacterController>().gameObject.transform.position = new Vector3(100,0,0);
+    }
+
+    public void OnEscapeButtonClicked()
+    {
+        var EscapeRange = Random.Range(0, 100);
+        if (EscapeRange > 30)
+        {
+            PlayerGO.transform.position = TempBattleLocation;
+            SceneManager.LoadScene("Overworld");
+        }
+        else
+        {
+            Debug.Log("Failed To Escape! Escape Range: " + EscapeRange);
+        }
     }
 
 public void OnQuitGameClicked()

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerCharacterController : MonoBehaviour
 {
-    List<int> wew;
+    public Vector3 TempBattleLocation = new Vector3(0,0,0);
 
     [SerializeField]
     float speed = 5;
@@ -13,6 +13,12 @@ public class PlayerCharacterController : MonoBehaviour
     Rigidbody2D rigidBody;
 
     public Vector2 movementVector;
+
+    void Start()
+    {
+        //TempBattleLocation = gameObject.transform;
+    }
+
     // Update is called once per frame
     void Update()
     {
