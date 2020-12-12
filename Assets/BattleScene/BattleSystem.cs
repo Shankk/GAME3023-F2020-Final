@@ -52,7 +52,7 @@ public class BattleSystem : MonoBehaviour
             {
                 BattleCompleted = true;
                 onCharacterTurn.Invoke("You Lost! Opponent Won!");
-                //SceneManager.LoadScene("GameOver");
+                SceneManager.LoadScene("GameOver");
             }
             else if(combatants[1].hp <= 0)
             {
