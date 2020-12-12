@@ -27,9 +27,12 @@ public class BattleSystem : MonoBehaviour
     bool TurnInProgress = false;
     bool BattleCompleted = false;
 
+    public AudioSource BattleMusic;
+    public AudioSource VictoryMusic;
+
     // Start is called before the first frame update
     void Start()
-    {
+    {   
         AdvanceTurn();
         foreach(ICharacter character in combatants)
         {
@@ -56,8 +59,10 @@ public class BattleSystem : MonoBehaviour
             }
             else if(combatants[1].hp <= 0)
             {
+                BattleMusic.Stop();
+                VictoryMusic.Play();
                 BattleCompleted = true;
-                StartCoroutine(WinLog(4.0f));
+                StartCoroutine(WinLog(6.0f));
             }
         }
         if(BattleCompleted)
