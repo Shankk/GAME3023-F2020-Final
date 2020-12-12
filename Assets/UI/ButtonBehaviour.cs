@@ -13,9 +13,12 @@ public class ButtonBehaviour : MonoBehaviour
 
     void Start()
     {
-        PlayerGO = GameObject.FindWithTag("Player");
-        Debug.Log("In Player Battle Position: " + PlayerGO.GetComponent<PlayerCharacterController>().TempBattleLocation);
-        TempBattleLocation = PlayerGO.GetComponent<PlayerCharacterController>().TempBattleLocation;
+        if(GameObject.FindWithTag("Player"))
+        {
+            PlayerGO = GameObject.FindWithTag("Player");
+            Debug.Log("In Player Battle Position: " + PlayerGO.GetComponent<PlayerCharacterController>().TempBattleLocation);
+            TempBattleLocation = PlayerGO.GetComponent<PlayerCharacterController>().TempBattleLocation;
+        }
     }
 
     public void OnMainMenuButtonClicked()
@@ -25,10 +28,6 @@ public class ButtonBehaviour : MonoBehaviour
 
     public void OnPlayButtonClicked()
     {
-        if(PlayerGO.tag == "Player")
-        {
-            PlayerGO.transform.position = new Vector3(0,0,0);
-        }
         SceneManager.LoadScene("Overworld");
     }
     public void OnFightButtonClicked()
@@ -44,7 +43,7 @@ public class ButtonBehaviour : MonoBehaviour
     public void OnEscapeButtonClicked()
     {
         var EscapeRange = Random.Range(0, 100);
-        if (EscapeRange > 30)
+        if (EscapeRange > 60)
         {
             PlayerGO.transform.position = TempBattleLocation;
             SceneManager.LoadScene("Overworld");
@@ -52,6 +51,7 @@ public class ButtonBehaviour : MonoBehaviour
         else
         {
             Debug.Log("Failed To Escape! Escape Range: " + EscapeRange);
+            battleSysRef.AdvanceTurn();
         }
     }
 
