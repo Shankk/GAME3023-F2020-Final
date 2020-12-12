@@ -28,6 +28,10 @@ public class ButtonBehaviour : MonoBehaviour
 
     public void OnPlayButtonClicked()
     {
+        if(PlayerGO != null)
+        {
+            PlayerGO.transform.position = new Vector3(0, 0, 0);
+        }
         SceneManager.LoadScene("Overworld");
     }
     public void OnFightButtonClicked()
@@ -43,15 +47,17 @@ public class ButtonBehaviour : MonoBehaviour
     public void OnEscapeButtonClicked()
     {
         var EscapeRange = Random.Range(0, 100);
+        var IsEscaped = false;
         if (EscapeRange > 60)
         {
-            PlayerGO.transform.position = TempBattleLocation;
-            SceneManager.LoadScene("Overworld");
+            IsEscaped = true;
+            StartCoroutine(battleSysRef.EscapeLog(2.0f, "Flee Was Successful!",IsEscaped));
         }
         else
         {
-            Debug.Log("Failed To Escape! Escape Range: " + EscapeRange);
-            battleSysRef.AdvanceTurn();
+            IsEscaped = false;
+            //Debug.Log("Failed To Escape! Escape Range: " + EscapeRange);
+            StartCoroutine(battleSysRef.EscapeLog(2.0f, "Flee Was Not Successful!",IsEscaped));
         }
     }
 

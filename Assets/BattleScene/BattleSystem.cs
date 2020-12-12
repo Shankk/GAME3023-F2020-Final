@@ -57,7 +57,7 @@ public class BattleSystem : MonoBehaviour
             else if(combatants[1].hp <= 0)
             {
                 BattleCompleted = true;
-                onCharacterTurn.Invoke("Player Won The Battle!");
+                StartCoroutine(WinLog(4.0f));
             }
         }
         if(BattleCompleted)
@@ -94,23 +94,47 @@ public class BattleSystem : MonoBehaviour
 
     public void CharacterUsedAbilityHandler(ICharacter caster, Ability ability)
     {
-        if (TurnInProgress == false && !BattleCompleted)
+        if (!TurnInProgress && !BattleCompleted)
         {
             TurnInProgress = true;
-
             ICharacter target = null;
             // Targets the User who isnt in Turn
             target = combatants[((int)phase + 1) % (int)BattlePhase.Count];
             ability.ApplyEffects(caster, target);
-            StartCoroutine(CurrentTurnLog(1.0f, caster, ability));
+            StartCoroutine(CurrentTurnLog(1.5f, caster, ability));
         }
         
     }
 
-    IEnumerator SwapTurnDelay(float time)
+    IEnumerator WinLog(float time)
     {
+        onCharacterTurn.Invoke("Player Won The Battle!");
         yield return new WaitForSeconds(time);
-        AdvanceTurn();
+        GameObject.FindWithTag("Player").transform.position = GameObject.FindWithTag("Player").GetComponent<PlayerCharacterController>().TempBattleLocation;
+        SceneManager.LoadScene("Overworld");
+       
+    }
+
+    public IEnumerator EscapeLog(float time,string EscapeInfo, bool Escape)
+    {
+        if (!TurnInProgress && !BattleCompleted)
+        {
+            TurnInProgress = true;
+            onCharacterTurn.Invoke("Player Used Flee!");
+            yield return new WaitForSeconds(time);
+            onCharacterTurn.Invoke(EscapeInfo);
+            yield return new WaitForSeconds(time);
+            if (Escape)
+            {
+                GameObject.FindWithTag("Player").transform.position = GameObject.FindWithTag("Player").GetComponent<PlayerCharacterController>().TempBattleLocation;
+                SceneManager.LoadScene("Overworld");
+            }
+            else
+            { 
+                TurnInProgress = false;
+                AdvanceTurn();
+            }
+        }
     }
 
     IEnumerator CurrentTurnLog(float time, ICharacter caster, Ability ability)
